@@ -1,7 +1,5 @@
 # Project - Andela Office Space Allocation  
 
-[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/bootcamp-week2/badge.svg?branch=master)](https://coveralls.io/github/NaiRobley/bootcamp-week2?branch=master)   [![Build Status](https://travis-ci.org/NaiRobley/bootcamp-week2.svg?branch=develop)](https://travis-ci.org/NaiRobley/bootcamp-week2)
-
 When a new Fellow joins Andela they are assigned an office space and an optional living space if
 they choose to opt in.
 When a new Staff joins they are assigned an office space only.
