@@ -30,16 +30,16 @@ $ sudo apt install python
 Clone the repo:
 HTTPS
 ```
-$ git clone https://github.com/NaiRobley/bootcamp-week2.git
+$ git clone https://github.com/NaiRobley/dojo.git
 ```
 SSH
 ```
-$ git clone git@github.com:NaiRobley/bootcamp-week2.git
+$ git clone git@github.com:NaiRobley/dojo.git
 ```
 
 Change Directory into the project folder
 ```
-$ cd bootcamp-week2
+$ cd dojo
 ```
 
 Create a virtual environment with Python 3.5
@@ -103,7 +103,6 @@ Coming soon
 
 * **Robley Gori**
 
-See also the list of [contributors](https://github.com/NaiRobley/) who participated in this project.
 
 ## License
 
