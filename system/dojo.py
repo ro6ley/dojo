@@ -59,9 +59,9 @@ class Dojo(object):
                             fellow_livingspace.r_name), "green")
                 else:
                     self.people["without_livingspaces"].append(new_fellow)
-                    cprint("Sorry. \
-                    No living space is currently available for {}. \
-                    Please try again later".format(new_fellow), "red")
+                    cprint("Sorry."
+                           "No living space is currently available for {}."
+                           "Please try again later".format(new_fellow), "red")
 
             elif wants_accommodation is False:
                 self.people["without_livingspaces"].append(new_fellow)
@@ -80,8 +80,8 @@ class Dojo(object):
 
             else:
                 self.people["without_offices"].append(new_fellow)
-                cprint("Sorry. No office is currently available for {}. \
-                        Please try again later".format(new_fellow), "red")
+                cprint("Sorry. No office is currently available for {}."
+                       "Please try again later".format(new_fellow), "red")
 
             return new_fellow
 
@@ -101,12 +101,12 @@ class Dojo(object):
                 staff_office.r_occupants.append(new_staff)
                 self.people["with_offices"].append(new_staff)
                 cprint("{0} has been allocated the office {1}.".
-                       format(f_name,staff_office.r_name),"green")
+                       format(f_name, staff_office.r_name),"green")
 
             else:
                 self.people["without_offices"].append(new_staff)
-                cprint("Sorry. No office is currently available for {}. \
-                        Please try again later".format(new_staff), "red")
+                cprint("Sorry. No office is currently available for {}."
+                       "Please try again later".format(new_staff), "red")
 
             return new_staff
 
@@ -116,7 +116,7 @@ class Dojo(object):
         """
         if r_type == "office":
             if r_name in [o.r_name for o in self.rooms["offices"]]:
-                cprint("Sorry. Office {} already exists. \nPlease try again"
+                cprint("Sorry. Office {} already exists. Please try again"
                        .format(r_name), "red")
             else:
                 new_office = Office(r_name)
@@ -127,8 +127,8 @@ class Dojo(object):
 
         elif r_type == "livingspace":
             if r_name in [ls.r_name for ls in self.rooms["livingspaces"]]:
-                cprint("Sorry. The Living Space {} already exists.\n\
-                        Please try again".format(r_name), "red")
+                cprint("Sorry. The Living Space {} already exists. "
+                       "Please try again".format(r_name), "red")
             else:
                 new_livingspace = LivingSpace(r_name)
                 self.rooms["livingspaces"].append(new_livingspace)
@@ -144,9 +144,10 @@ class Dojo(object):
         output = ""
         if self.rooms["offices"] or self.rooms["livingspaces"]:
             for office in self.rooms["offices"]:
-                cprint("{0} - {1}\n".format(office.r_name, office.r_type),
+                cprint("\n" + ("-" * 50), "green")
+                cprint("{0} - {1}".format(office.r_name, office.r_type),
                        "green")
-                cprint(("-" * 50) + "\n", "green")
+                cprint(("-" * 50), "green")
                 output += ("{0} - {1}\n".format(office.r_name, office.r_type))
                 output += ("-" * 50) + "\n"
                 if office.r_occupants:
@@ -154,14 +155,15 @@ class Dojo(object):
                         cprint(person.p_name, "green")
                         output += (person.p_name + "\n")
                 else:
-                    cprint("This room has no occupants.", "red")
+                    cprint("This room has no occupants.\n", "red")
                     output += "This room has no occupants.\n"
                 output += "\n"
 
             for livingspace in self.rooms["livingspaces"]:
-                cprint("{0} - {1}\n".format(livingspace.r_name,
+                cprint("\n" + ("-" * 50), "green")
+                cprint("{0} - {1}".format(livingspace.r_name,
                                             livingspace.r_type), "green")
-                cprint(("-" * 50) + "\n", "green")
+                cprint(("-" * 50), "green")
                 output += (
                     "{0} - {1}\n".format(livingspace.r_name,
                                          livingspace.r_type))
@@ -199,23 +201,25 @@ class Dojo(object):
         """
         output = ""
         if self.people["without_livingspaces"]:
-            cprint("People without living spaces:", "yellow")
+            cprint("People without living spaces:\n", "yellow")
             output += "People without living spaces:\n"
             for person in self.people["without_livingspaces"]:
-                cprint(" {0} - {1}".format(person.p_name, person.p_type),
+                cprint("\t{0} - {1}".format(person.p_name, person.p_type),
                        "yellow")
-                output += " {0} - {1}\n".format(person.p_name, person.p_type)
+                print("")
+                output += "\t{0} - {1}\n".format(person.p_name, person.p_type)
         elif not self.people["without_livingspaces"]:
             cprint("Every fellow has a living space in the Dojo.\n", "green")
             output += "Every fellow has a living space in the Dojo.\n\n"
 
         if self.people["without_offices"]:
-            cprint("People without offices:", "yellow")
+            cprint("People without offices:\n", "yellow")
             output += "People without offices:\n"
             for person in self.people["without_offices"]:
-                cprint(" {0} - {1}".format(person.p_name, person.p_type),
+                cprint("\t{0} - {1}".format(person.p_name, person.p_type),
                        "yellow")
-                output += " {0} - {1}\n".format(person.p_name, person.p_type)
+                print("")
+                output += "\t{0} - {1}\n".format(person.p_name, person.p_type)
         elif not self.people["without_offices"]:
             cprint("Everyone has an office in the Dojo.\n", "green")
             output += "Everyone has an office in the Dojo.\n"
@@ -238,8 +242,8 @@ class Dojo(object):
         rooms = self.rooms["offices"] + self.rooms["livingspaces"]
         output = ""
         if r_name not in [r.r_name for r in rooms]:
-            cprint("Sorry. The room you have entered does not exist.\
-                                            Please try again", "red")
+            cprint("Sorry. The room you have entered does not exist."
+                   "Please try again", "red")
             return "Sorry. The room you have entered does not exist. \
                                                         Please try again"
         for r in rooms:
@@ -363,8 +367,8 @@ class Dojo(object):
                                     old_livingspace.r_occupants.pop(
                                         old_livingspace.r_occupants.index(
                                             new_person)))
-                                cprint("{0} has been reallocated \
-                                    to {1} from {2}".format(
+                                cprint("{0} has been reallocated "
+                                       "to {1} from {2}".format(
                                     new_person.p_name, r_name,
                                     old_livingspace.r_name), "green")
                             elif new_person in \
@@ -372,8 +376,8 @@ class Dojo(object):
                                 self.people["without_livingspaces"].remove(
                                     new_person)
                                 new_room.r_occupants.append(new_person)
-                                cprint("{0} has been reallocated \
-                                    to {1} from unallocated".format(
+                                cprint("{0} has been reallocated "
+                                       "to {1} from unallocated".format(
                                     new_person.p_name, r_name), "green")
                             else:
                                 cprint("{} has not been reallocated.".format(
