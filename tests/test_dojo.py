@@ -34,6 +34,16 @@ class DojoTestCases(unittest.TestCase):
         new_livingspace_count = len(self.new_dojo.rooms["livingspaces"])
         self.assertEqual(new_livingspace_count - initial_livingspace_count, 1)
 
+    def test_get_random_room(self):
+        """
+        Test that the function can return a room for allocation that has
+        a vacant space
+        """
+        random_office = self.new_dojo.get_random_room("office")
+        random_livingspace = self.new_dojo.get_random_room("livingspace")
+        self.assertTrue(isinstance(random_office, Office))
+        self.assertTrue(isinstance(random_livingspace, LivingSpace))
+
     def test_add_person(self):
         """
         Test the creation of a new fellow and staff
