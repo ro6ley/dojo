@@ -180,7 +180,7 @@ class Dojo(object):
             if filename:
                 file = os.path.join(
                     os.path.dirname(os.path.realpath(__file__)),
-                    "../output_files", filename)
+                    "..", "output_files", filename)
                 f = open(file, "w+")
                 f.write(output)
                 f.close()
@@ -226,7 +226,7 @@ class Dojo(object):
 
         if filename:
             file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                "../output_files", filename)
+                                "..", "output_files", filename)
             f = open(file, "w+")
             f.write(output)
             f.close()
@@ -427,7 +427,7 @@ class Dojo(object):
         Method to load people from text file and allocate them rooms
         """
         file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                            "../input_files", filename)
+                            "..", "input_files", filename)
         if file:
             f = open(file, "r")
             for line in f:
