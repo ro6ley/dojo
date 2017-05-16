@@ -124,7 +124,7 @@ class MyInteractive(cmd.Cmd):
         """Usage: print_room <room_name>"""
         room_name = args["<room_name>"]
         print("")
-        print(new_dojo.print_room(room_name))
+        new_dojo.print_room(room_name)
 
     @docopt_cmd
     def do_print_allocations(self, args):
