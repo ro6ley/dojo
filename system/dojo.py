@@ -36,9 +36,6 @@ class Dojo(object):
         them rooms
         """
         p_name = f_name + " " + l_name
-        # if p_name in [f.p_name for f in self.people["fellows"]] or p_name in [s.p_name for s in self.people["staff"]]:
-        #     print("Sorry. {} already exists in the system. Please try again".format(p_name))
-        # else:
         if p_type == "fellow":
             new_fellow = Fellow(p_name)
             self.people["fellows"].append(new_fellow)
@@ -372,7 +369,7 @@ class Dojo(object):
     def save_state(self, db_name="dojo.db"):
         """Method to save details to db using SQL"""
         # Create database
-        # Create tables: fellows, staff, without_offices, without_livingspaces, offices, livingspaces
+        # Create tables: fellows, staff, without_offices, without_livingspaces, offices,livingspaces
         # Fellow/Staff structure: id, first name, last name, type
         # Office/Livingspace structure: id, room name, room type, room_members_ids
         pass
