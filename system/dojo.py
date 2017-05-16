@@ -47,7 +47,7 @@ class Dojo(object):
                 # Check if there is a vacant living space,
                 # if none, add the fellow to the without living spaces list
                 if [r for r in self.rooms["livingspaces"] if
-                    len(r.r_occupants) < r.r_capacity]:
+                   len(r.r_occupants) < r.r_capacity]:
                     fellow_livingspace = random.choice(
                         [r for r in self.rooms["livingspaces"] if
                          len(r.r_occupants) < r.r_capacity])
@@ -450,9 +450,11 @@ class Dojo(object):
     def save_state(self, db_name="dojo.db"):
         """Method to save details to db using SQL"""
         # Create database
-        # Create tables: fellows, staff, without_offices, without_livingspaces, offices,livingspaces
+        # Create tables: fellows, staff, without_offices,
+        #    without_livingspaces, offices,livingspaces
         # Fellow/Staff structure: id, first name, last name, type
-        # Office/Livingspace structure: id, room name, room type, room_members_ids
+        # Office/Livingspace structure: id, room name,
+        # room type, room_members_ids
         pass
 
     def load_state(self, db_name="dojo.db"):
@@ -460,5 +462,6 @@ class Dojo(object):
         # Open db if exists
         # Read tables
         # Add people to system
-        # Add rooms while recreating the people objects and saving them to their rooms
+        # Add rooms while recreating the people objects
+        # and saving them to their rooms
         pass
