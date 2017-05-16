@@ -15,6 +15,7 @@ Usage:
     dojo print_room <room_name>
     dojo print_allocations [<filename>]
     dojo print_unallocated [<filename>]
+    dojo print_vacant_rooms
     dojo load_people [<filename>]
     dojo get_person_id <person_first_name> <person_last_name>
     dojo reallocate_person <person_id> <room_name>
@@ -93,6 +94,9 @@ class MyInteractive(cmd.Cmd):
         elif args["<room_type>"].lower() == "livingspace":
             for i in args["<room_name>"]:
                 new_dojo.create_room(i, "livingspace")
+        else:
+            cprint(
+                "Sorry. Check the room type you entered and try again", "red")
 
     @docopt_cmd
     def do_add_person(self, args):
@@ -119,12 +123,26 @@ class MyInteractive(cmd.Cmd):
                 new_dojo.add_person(person_first_name, person_last_name, p_type)
                 print("")
 
+                if args["<wants_accommodation>"] == "Y" or args[
+                       "<wants_accommodation>"] == "y":
+                    cprint("Sorry. Staff cannot be allocated to a living space"
+                           , "red")
+
+            else:
+                cprint("Sorry. Check the person type you entered and try again"
+                       , "red")
+
     @docopt_cmd
     def do_print_room(self, args):
         """Usage: print_room <room_name>"""
         room_name = args["<room_name>"]
         print("")
         new_dojo.print_room(room_name)
+
+    @docopt_cmd
+    def do_print_vacant_rooms(self, args):
+        """Usage: print_vacant_rooms"""
+        new_dojo.print_vacant_rooms()
 
     @docopt_cmd
     def do_print_allocations(self, args):
