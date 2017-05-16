@@ -107,6 +107,13 @@ class DojoTestCases(unittest.TestCase):
         self.assertIn("Faith Gori\n", self.new_dojo.print_room("Blue"))
         self.assertIn("Robley Gori\n", self.new_dojo.print_room("Mara"))
 
+    def test_print_vacant_rooms(self):
+        """
+        Test that the function can return a list of rooms with vacancies
+        """
+        vacant_rooms = self.new_dojo.print_vacant_rooms()
+        self.assertTrue(isinstance(vacant_rooms, list))
+
     def test_get_person_id(self):
         """
         Test that a user can get the id of a person or people with common names to use to reallocate them
