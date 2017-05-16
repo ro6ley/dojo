@@ -199,8 +199,8 @@ class DojoTestCases(unittest.TestCase):
         self.assertTrue(os.path.exists(file))
         with open(file) as f:
             lines = f.readlines()
-            self.assertIn(" New Guy - staff\n", lines)
-            self.assertIn(" New Lady - fellow\n", lines)
+            self.assertIn("\tNew Guy - staff\n", lines)
+            self.assertIn("\tNew Lady - fellow\n", lines)
         os.remove(file)
 
     def test_save_state(self):
