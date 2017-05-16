@@ -31,6 +31,30 @@ class Dojo(object):
             "livingspaces": []
         }
 
+    def get_random_room(self, room_type):
+        """
+        Method to return an office or living space that has a vacancy
+        """
+        # Get a random office
+        if room_type == "office":
+            if [r for r in self.rooms["offices"]
+               if len(r.r_occupants) < r.r_capacity]:
+                random_office = random.choice(
+                    [r for r in self.rooms["offices"] if
+                     len(r.r_occupants) < r.r_capacity])
+
+                return random_office
+
+        # Get a random living space
+        elif room_type == "livingspace":
+            if [r for r in self.rooms["livingspaces"]
+               if len(r.r_occupants) < r.r_capacity]:
+                random_livingspace = random.choice(
+                    [r for r in self.rooms["livingspaces"] if
+                     len(r.r_occupants) < r.r_capacity])
+
+                return random_livingspace
+
     def add_person(self, f_name, l_name, p_type, wants_accommodation=False):
         """
         Method to create a fellow or staff, add them to the system and allocate
@@ -46,11 +70,8 @@ class Dojo(object):
             if wants_accommodation is True:
                 # Check if there is a vacant living space,
                 # if none, add the fellow to the without living spaces list
-                if [r for r in self.rooms["livingspaces"] if
-                   len(r.r_occupants) < r.r_capacity]:
-                    fellow_livingspace = random.choice(
-                        [r for r in self.rooms["livingspaces"] if
-                         len(r.r_occupants) < r.r_capacity])
+                fellow_livingspace = self.get_random_room("livingspace")
+                if fellow_livingspace is not None:
                     fellow_livingspace.r_occupants.append(new_fellow)
                     self.people["with_livingspaces"].append(new_fellow)
                     cprint(
@@ -68,11 +89,8 @@ class Dojo(object):
 
             # Check if there is a vacant office, if none, add the fellow to
             # the without offices list
-            if [r for r in self.rooms["offices"] if
-                len(r.r_occupants) < r.r_capacity]:
-                fellow_office = random.choice(
-                    [r for r in self.rooms["offices"] if
-                     len(r.r_occupants) < r.r_capacity])
+            fellow_office = self.get_random_room("office")
+            if fellow_office is not None:
                 fellow_office.r_occupants.append(new_fellow)
                 self.people["with_offices"].append(new_fellow)
                 cprint("{0} has been allocated the office {1}."
@@ -93,16 +111,12 @@ class Dojo(object):
 
             # Check if there is a vacant office, if none, add the fellow to the
             # without offices list
-            if [o for o in self.rooms["offices"] if
-                len(o.r_occupants) < o.r_capacity]:
-                staff_office = random.choice(
-                    [o for o in self.rooms["offices"] if
-                     len(o.r_occupants) < o.r_capacity])
+            staff_office = self.get_random_room("office")
+            if staff_office is not None:
                 staff_office.r_occupants.append(new_staff)
                 self.people["with_offices"].append(new_staff)
                 cprint("{0} has been allocated the office {1}.".
-                       format(f_name, staff_office.r_name),"green")
-
+                       format(f_name, staff_office.r_name), "green")
             else:
                 self.people["without_offices"].append(new_staff)
                 cprint("Sorry. No office is currently available for {}."
