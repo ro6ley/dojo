@@ -275,6 +275,26 @@ class Dojo(object):
                     output += "This room has no occupants.\n"
         return output
 
+    def print_vacant_rooms(self):
+        """
+        Method to print all rooms in the Dojo that have vacant spaces
+        """
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if all_rooms:
+            vacant_rooms = [room for room in all_rooms if len(room.r_occupants) < room.r_capacity]
+            if vacant_rooms is not None:
+                for room in vacant_rooms:
+                    empty_spaces = room.r_capacity - len(room.r_occupants)
+                    cprint("\t{0} - Vacant spaces {1}".format(room.r_name, empty_spaces), "green")
+                return vacant_rooms
+
+            elif vacant_rooms is None:
+                cprint("\tSorry there are no vacant rooms available at the moment.", "red")
+                return []
+        else:
+            cprint("\tSorry there are no vacant rooms available at the moment.", "red")
+            return []
+
     def get_person_id(self, p_name):
         """
         This method will get a person's unique ID given their names to help the
@@ -442,28 +462,33 @@ class Dojo(object):
         """
         file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             "..", "input_files", filename)
-        if file:
+        try:
             f = open(file, "r")
-            for line in f:
-                f_name = line.split()[0]
-                l_name = line.split()[1]
-                p_name = f_name + " " + l_name
-                person_type = line.split()[2]
-                if len(line.split()) == 4 and person_type == "FELLOW":
-                    self.add_person(f_name, l_name, p_type="fellow",
-                                    wants_accommodation=True)
-                    print("")
+            if f:
+                for line in f:
+                    f_name = line.split()[0]
+                    l_name = line.split()[1]
+                    p_name = f_name + " " + l_name
+                    person_type = line.split()[2]
+                    if len(line.split()) == 4 and person_type == "FELLOW":
+                        self.add_person(f_name, l_name, p_type="fellow",
+                                        wants_accommodation=True)
+                        print("")
 
-                elif len(line.split()) == 3 and person_type == "FELLOW":
-                    self.add_person(f_name, l_name, p_type="fellow")
-                    print("")
+                    elif len(line.split()) == 3 and person_type == "FELLOW":
+                        self.add_person(f_name, l_name, p_type="fellow")
+                        print("")
 
-                elif len(line.split()) == 3 and person_type == "STAFF":
-                    self.add_person(f_name, l_name, p_type="staff")
-                    print("")
-        else:
-            cprint("The filename you provided does not exist or is empty. \
-            Please check and try again.", "red")
+                    elif len(line.split()) == 3 and person_type == "STAFF":
+                        self.add_person(f_name, l_name, p_type="staff")
+                        print("")
+            else:
+                cprint("The filename you provided is empty."
+                       "Please check and try again.", "red")
+
+        except FileNotFoundError:
+            cprint("\tThe file {} was not found. Check and try again".format(filename), "red")
+
 
     def save_state(self, db_name="dojo.db"):
         """Method to save details to db using SQL"""
