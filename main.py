@@ -199,7 +199,7 @@ class MyInteractive(cmd.Cmd):
     def do_load_state(self, args):
         """Usage: load_state [<sqlite_db_name>]"""
         if args["<sqlite_db_name>"]:
-            new_dojo.load_state(args["<sqlite_db_name>"])
+            new_dojo.load_state(db_name=args["<sqlite_db_name>"])
         else:
             new_dojo.load_state()
 
