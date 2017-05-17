@@ -5,3 +5,4 @@ __pycache__/
 htmlcov/
 envdojo/
 .coverage
+*.db
