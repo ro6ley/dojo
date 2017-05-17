@@ -34,6 +34,16 @@ class DojoTestCases(unittest.TestCase):
         new_livingspace_count = len(self.new_dojo.rooms["livingspaces"])
         self.assertEqual(new_livingspace_count - initial_livingspace_count, 1)
 
+    def test_get_random_room(self):
+        """
+        Test that the function can return a room for allocation that has
+        a vacant space
+        """
+        random_office = self.new_dojo.get_random_room("office")
+        random_livingspace = self.new_dojo.get_random_room("livingspace")
+        self.assertTrue(isinstance(random_office, Office))
+        self.assertTrue(isinstance(random_livingspace, LivingSpace))
+
     def test_add_person(self):
         """
         Test the creation of a new fellow and staff
@@ -59,7 +69,7 @@ class DojoTestCases(unittest.TestCase):
         self.new_dojo.add_person("Faith", "Gori", "staff")
         self.new_dojo.add_person("Robley", "Gori", "fellow", True)
         self.new_dojo.print_allocations("newfile.txt")
-        file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "newfile.txt")
+        file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "output_files", "newfile.txt")
         # Check if file is created
         self.assertTrue(os.path.exists(file))
 
@@ -96,6 +106,13 @@ class DojoTestCases(unittest.TestCase):
         self.assertIn("Mara - livingspace\n", self.new_dojo.print_room("Mara"))
         self.assertIn("Faith Gori\n", self.new_dojo.print_room("Blue"))
         self.assertIn("Robley Gori\n", self.new_dojo.print_room("Mara"))
+
+    def test_print_vacant_rooms(self):
+        """
+        Test that the function can return a list of rooms with vacancies
+        """
+        vacant_rooms = self.new_dojo.print_vacant_rooms()
+        self.assertTrue(isinstance(vacant_rooms, list))
 
     def test_get_person_id(self):
         """
@@ -194,24 +211,24 @@ class DojoTestCases(unittest.TestCase):
         newDojo.add_person("New", "Guy", "staff")
         newDojo.add_person("New", "Lady", "fellow", False)
         newDojo.print_unallocated("newfile.txt")
-        file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "newfile.txt")
+        file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "output_files", "newfile.txt")
         # Check if file is created
         self.assertTrue(os.path.exists(file))
         with open(file) as f:
             lines = f.readlines()
-            self.assertIn(" New Guy - staff\n", lines)
-            self.assertIn(" New Lady - fellow\n", lines)
+            self.assertIn("\tNew Guy - staff\n", lines)
+            self.assertIn("\tNew Lady - fellow\n", lines)
         os.remove(file)
 
     def test_save_state(self):
         """
         Test that data can be saved from the system to the database
         """
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "new_db.db")
+        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
         self.new_dojo.save_state(new_db)
 
         # database file existence
-        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "new_db.db")))
+        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")))
         os.remove(new_db)
 
     def test_load_state(self):
@@ -220,15 +237,15 @@ class DojoTestCases(unittest.TestCase):
         """
         # Save current data to database
         self.new_dojo.create_room("Hello", "office")
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "new_db.db")
+        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
         self.new_dojo.save_state(new_db)
 
         # Get the database file and load it and check if our data was saved
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "new_db.db")
+        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
         self.new_dojo.load_state(new_db)
 
         # Check if database file is found
-        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../output_files", "new_db.db")))
+        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")))
 
         # Data is entered into the application
         total_rooms = len(self.new_dojo.rooms['offices']) + len(self.new_dojo.rooms['livingspaces'])
