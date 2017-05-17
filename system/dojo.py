@@ -559,9 +559,83 @@ class Dojo(object):
     def load_state(self, db_name="dojo.db"):
         """Method to load the data stored in the database"""
         # Open db if exists
-        # Read tables
-        # Populate list of people
-        # Populate list of rooms while recreating the people objects
-        # and saving them to their rooms
-        # Populate list of unallocated
-        pass
+        if os.path.exists(db_name):
+            engine = create_engine("sqlite:///{}".format(db_name))
+
+            # Create a session
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            # Get people
+            if session.query(People):
+                cprint("\tLoading people from the database...", "green")
+                for person in session.query(People):
+                    if person.person_type == "fellow":
+                        # Recreate the fellow
+                        old_fellow = Fellow(person.names, p_type="fellow")
+                        old_fellow.p_id = person.person_id
+                        self.people["fellows"].append(old_fellow)
+                    elif person.person_type == "staff":
+                        # Recreate the staff
+                        old_staff = Staff(person.names, p_type="staff")
+                        old_staff.p_id = person.person_id
+                        self.people["staff"].append(old_staff)
+
+                cprint("\tAll the people have been loaded from the database",
+                       "green")
+            else:
+                cprint("\tNo people in the database", "red")
+
+            # Get rooms
+            if session.query(Rooms):
+                cprint("\tLoading rooms from the database...", "green")
+                for room in session.query(Rooms):
+                    if room.room_type == "office":
+                        # Create the offices
+                        old_office = Office(room.room_name, r_capacity=room.room_capacity)
+                        # Use the ids to populate the occupants from people
+                        members = [int(p) for p in room.room_occupants.split(",") if p]
+                        if len(members) > 0:
+                            for member in members:
+                                old_office.r_occupants.append(self.get_person_object(member))
+
+                            self.rooms["offices"].append(old_office)
+
+                        cprint("\tAll offices have been loaded to the system", "green")
+
+                    elif room.room_type == "livingspace":
+                        # Create the offices
+                        old_livingspace = LivingSpace(room.room_name, r_capacity=room.room_capacity)
+                        # Use the ids to populate the occupants from people
+                        members = [int(p) for p in room.room_occupants.split(",") if p]
+                        if len(members) > 0:
+                            for member in members:
+                                old_livingspace.r_occupants.append(self.get_person_object(member))
+
+                        self.rooms["livingspaces"].append(old_livingspace)
+
+                        cprint("\tAll living spaces have been loaded to the system",
+                               "green")
+
+                    print("")
+                cprint("\tAll the rooms have been loaded from the database", "green")
+
+            else:
+                cprint("\tNo rooms in the database", "red")
+
+            # Get unallocated
+            if session.query(Unallocated):
+                cprint("\tUpdating list of unallocated people...", "green")
+                for person in session.query(Unallocated):
+                    if person.without_room == "office":
+                        self.people["without_offices"].append(self.get_person_object(person.person_id))
+                    elif person.without_room == "livingspace":
+                        self.people["without_offices"].append(self.get_person_object(person.person_id))
+
+                cprint("\tList of unallocated people has been updated")
+
+            else:
+                cprint("\tThere are no unallocated people in the database", "green")
+        else:
+            cprint("\tThe database {} does not exist.".format(db_name), "red")
+
