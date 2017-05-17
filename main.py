@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-    ██████ █    █ █████     ███▄▄  ████▄ ██████ ████▄
-      ██   █▄▄▄▄█ █▄▄▄▄     █    █ █   █   ██   █   █
-      ██   █▀▀▀▀█ █▀▀▀▀     █    █ █   █   ██   █   █
-      ██   █    █ █████     ███▀▀  ▀████ ████   ▀████
+    ██████ █    █ █████       ███▄▄  ████▄ ██████ ████▄
+      ██   █▄▄▄▄█ █▄▄▄▄       █    █ █   █   ██   █   █
+      ██   █▀▀▀▀█ █▀▀▀▀       █    █ █   █   ██   █   █
+      ██   █    █ █████       ███▀▀  ▀████ ████   ▀████
 
 Welcome to the Dojo
 
@@ -23,10 +23,12 @@ Usage:
     dojo save_state [<sqlite_db_name>]
     dojo (-i | --interactive)
     dojo (-h | --help)
+    dojo (-v | --version)
 
 Options:
     -i, --interactive           :  Interactive Mode
-    -h,--help                   :  show this help message
+    -h, --help                  :  show this help message
+    -v, --version               :  print the version of the system
     create_room                 :  create a room of a certain type
     add_person                  :  add a person to the system
     <room_type>                 :  office or livingspace
@@ -202,6 +204,11 @@ class MyInteractive(cmd.Cmd):
             new_dojo.load_state(db_name=args["<sqlite_db_name>"])
         else:
             new_dojo.load_state()
+
+    @docopt_cmd
+    def do_version(self, args):
+        """Usage: version"""
+        cprint("Version 1.0")
 
     def do_quit(self, args):
         """Quits out of Interactive Mode."""
