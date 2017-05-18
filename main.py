@@ -108,31 +108,37 @@ class MyInteractive(cmd.Cmd):
             person_last_name = args["<person_last_name>"]
 
             if args["<person_type>"].upper() == "FELLOW":
-                if args["<wants_accommodation>"] == "Y" or args["<wants_accommodation>"] == "y":
+                if args["<wants_accommodation>"] == "Y" or\
+                                args["<wants_accommodation>"] == "y":
                     wants_accommodation = True
                     p_type = "fellow"
-                    new_dojo.add_person(person_first_name, person_last_name, p_type, wants_accommodation)
+                    new_dojo.add_person(person_first_name, person_last_name,
+                                        p_type, wants_accommodation)
                     print("")
 
                 elif args["<wants_accommodation>"] is None:
                     wants_accommodation = False
                     p_type = "fellow"
-                    new_dojo.add_person(person_first_name, person_last_name, p_type, wants_accommodation)
+                    new_dojo.add_person(person_first_name, person_last_name,
+                                        p_type, wants_accommodation)
                     print("")
 
             elif args["<person_type>"].upper() == "STAFF":
                 p_type = "staff"
-                new_dojo.add_person(person_first_name, person_last_name, p_type)
+                new_dojo.add_person(person_first_name,
+                                    person_last_name, p_type)
                 print("")
 
                 if args["<wants_accommodation>"] == "Y" or args[
                        "<wants_accommodation>"] == "y":
-                    cprint("Sorry. Staff cannot be allocated to a living space"
-                           , "red")
+                    cprint(
+                          "Sorry. Staff cannot be allocated to a living space",
+                          "red")
 
             else:
-                cprint("Sorry. Check the person type you entered and try again"
-                       , "red")
+                cprint(
+                      "Sorry. Check the person type you entered and try again",
+                      "red")
 
     @docopt_cmd
     def do_print_room(self, args):
