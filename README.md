@@ -1,3 +1,7 @@
+[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/dojo/badge.svg?branch=version2)](https://coveralls.io/github/NaiRobley/dojo?branch=version2)
+[![Build Status](https://travis-ci.org/NaiRobley/dojo.svg?branch=version2)](https://travis-ci.org/NaiRobley/dojo)
+
+
 # Project - Andela Office Space Allocation  
 
 When a new Fellow joins Andela they are assigned an office space and an optional living space if

@@ -224,28 +224,26 @@ class DojoTestCases(unittest.TestCase):
         """
         Test that data can be saved from the system to the database
         """
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
-        self.new_dojo.save_state(new_db)
+        self.new_dojo.save_state("new_db.db")
 
         # database file existence
-        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")))
-        os.remove(new_db)
+        self.assertTrue(os.path.exists("new_db.db"))
+        os.remove("new_db.db")
 
     def test_load_state(self):
         """
-        Test that data can be loaded to the application from the database
+        Test that data can be save to the database from the application
+        Test that saved data can be loaded to the application from the database
         """
         # Save current data to database
         self.new_dojo.create_room("Hello", "office")
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
-        self.new_dojo.save_state(new_db)
-
-        # Get the database file and load it and check if our data was saved
-        new_db = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")
-        self.new_dojo.load_state(new_db)
+        self.new_dojo.save_state("test_dojo.db")
 
         # Check if database file is found
-        self.assertTrue(os.path.exists(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "new_db.db")))
+        self.assertTrue(os.path.exists("test_dojo.db"))
+
+        # Get the database file and load it and check if our data was saved
+        self.new_dojo.load_state("test_dojo.db")
 
         # Data is entered into the application
         total_rooms = len(self.new_dojo.rooms['offices']) + len(self.new_dojo.rooms['livingspaces'])
@@ -253,14 +251,18 @@ class DojoTestCases(unittest.TestCase):
 
         # Assert that the number of people and rooms in database is
         # equal to the number that we created when setting up the class
-        self.assertEqual(3, total_rooms)
-        self.assertEqual(1, total_people)
+        self.assertEqual(5, total_rooms)
+        self.assertEqual(2, total_people)
 
         # Check if our created office was saved and retrieved
         loaded_offices = [office.r_name for office in self.new_dojo.rooms["offices"]]
         self.assertIn("Hello", loaded_offices)
 
-        os.remove(new_db)
+        # Check if the fellow we added was saved and retrieved
+        loaded_people = [person.p_name for person in self.new_dojo.people["fellows"]]
+        self.assertIn("Another Lady", loaded_people)
+
+        os.remove("test_dojo.db")
 
 
 if __name__ == "__main__":

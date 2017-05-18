@@ -1,13 +1,14 @@
 import sys
 import os
-import sqlite3
 import random
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from termcolor import cprint
 from os import path
-
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from system.person import Fellow, Staff
 from system.room import Office, LivingSpace
+from system.models import People, Rooms, Unallocated, BASE
 
 BASE_DIR = ""
 
@@ -128,9 +129,10 @@ class Dojo(object):
         """
         Method to create an office or living space as specified by the user
         """
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
         if r_type == "office":
-            if r_name in [o.r_name for o in self.rooms["offices"]]:
-                cprint("Sorry. Office {} already exists. Please try again"
+            if r_name in [o.r_name for o in all_rooms]:
+                cprint("Sorry. A room called {} already exists. Please try again"
                        .format(r_name), "red")
             else:
                 new_office = Office(r_name)
@@ -140,8 +142,8 @@ class Dojo(object):
                 return new_office
 
         elif r_type == "livingspace":
-            if r_name in [ls.r_name for ls in self.rooms["livingspaces"]]:
-                cprint("Sorry. The Living Space {} already exists. "
+            if r_name in [ls.r_name for ls in all_rooms]:
+                cprint("Sorry. A room called {} already exists. "
                        "Please try again".format(r_name), "red")
             else:
                 new_livingspace = LivingSpace(r_name)
@@ -489,22 +491,151 @@ class Dojo(object):
         except FileNotFoundError:
             cprint("\tThe file {} was not found. Check and try again".format(filename), "red")
 
-
     def save_state(self, db_name="dojo.db"):
         """Method to save details to db using SQL"""
         # Create database
-        # Create tables: fellows, staff, without_offices,
-        #    without_livingspaces, offices,livingspaces
-        # Fellow/Staff structure: id, first name, last name, type
-        # Office/Livingspace structure: id, room name,
-        # room type, room_members_ids
-        pass
+        if os.path.exists(db_name):
+            os.remove(db_name)
+
+        engine = create_engine("sqlite:///{}".format(db_name))
+        BASE.metadata.bind = engine
+        BASE.metadata.create_all(engine)
+        cprint("Database created", "green")
+
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        all_people = self.people["staff"] + self.people["fellows"]
+        if all_people:
+            cprint("\tSaving the people in the dojo...", "green")
+            for person in all_people:
+                new_person = People(
+                    person.p_id, person.p_name, person.p_type
+                )
+                session.add(new_person)
+                session.commit()
+            cprint("\tDone.", "green")
+        else:
+            cprint("\tThere are no people in the Dojo to be saved.", "yellow")
+
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if all_rooms:
+            cprint("\tSaving the rooms in the dojo...", "green")
+            for room in all_rooms:
+                room_occupants = ",".join([str(p.p_id) for p in room.r_occupants])
+                new_room = Rooms(
+                    room.r_name, room.r_type, room.r_capacity, room_occupants
+                )
+                session.add(new_room)
+                session.commit()
+            cprint("\tDone.", "green")
+        else:
+            cprint("There are no rooms in the Dojo to be saved", "yellow")
+
+        all_unallocated = self.people["without_offices"] + self.people["without_livingspaces"]
+        if all_unallocated:
+            cprint("\tSaving the unallocated people in the dojo...", "green")
+            for person in self.people["without_offices"]:
+                new_unallocated = Unallocated(
+                    person.p_id, person.p_name, person.p_type, without_room="office"
+                )
+
+                session.add(new_unallocated)
+                session.commit()
+
+            for person in self.people["without_livingspaces"]:
+                new_unallocated = Unallocated(
+                    person.p_id, person.p_name, person.p_type,
+                    without_room="livingspace"
+                )
+                session.add(new_unallocated)
+                session.commit()
+
+            cprint("\tDone.", "green")
+
+        else:
+            cprint("There are no people who are unallocated in the dojo to be saved.", "yellow")
 
     def load_state(self, db_name="dojo.db"):
         """Method to load the data stored in the database"""
         # Open db if exists
-        # Read tables
-        # Add people to system
-        # Add rooms while recreating the people objects
-        # and saving them to their rooms
-        pass
+        if os.path.exists(db_name):
+            engine = create_engine("sqlite:///{}".format(db_name))
+
+            # Create a session
+            Session = sessionmaker(bind=engine)
+            session = Session()
+
+            # Get people
+            if session.query(People):
+                cprint("\tLoading people from the database...", "green")
+                for person in session.query(People):
+                    if person.person_type == "fellow":
+                        # Recreate the fellow
+                        old_fellow = Fellow(person.names, p_type="fellow")
+                        old_fellow.p_id = person.person_id
+                        self.people["fellows"].append(old_fellow)
+                    elif person.person_type == "staff":
+                        # Recreate the staff
+                        old_staff = Staff(person.names, p_type="staff")
+                        old_staff.p_id = person.person_id
+                        self.people["staff"].append(old_staff)
+
+                cprint("\tAll the people have been loaded from the database",
+                       "green")
+            else:
+                cprint("\tNo people in the database", "red")
+
+            # Get rooms
+            if session.query(Rooms):
+                cprint("\tLoading rooms from the database...", "green")
+                for room in session.query(Rooms):
+                    if room.room_type == "office":
+                        # Create the offices
+                        old_office = Office(room.room_name, r_capacity=room.room_capacity)
+                        # Use the ids to populate the occupants from people
+                        members = [int(p) for p in room.room_occupants.split(",") if p]
+                        if len(members) > 0:
+                            for member in members:
+                                old_office.r_occupants.append(self.get_person_object(member))
+
+                            self.rooms["offices"].append(old_office)
+
+                        cprint("\tAll offices have been loaded to the system", "green")
+
+                    elif room.room_type == "livingspace":
+                        # Create the offices
+                        old_livingspace = LivingSpace(room.room_name, r_capacity=room.room_capacity)
+                        # Use the ids to populate the occupants from people
+                        members = [int(p) for p in room.room_occupants.split(",") if p]
+                        if len(members) > 0:
+                            for member in members:
+                                old_livingspace.r_occupants.append(self.get_person_object(member))
+
+                        self.rooms["livingspaces"].append(old_livingspace)
+
+                        cprint("\tAll living spaces have been loaded to the system",
+                               "green")
+
+                    print("")
+                cprint("\tAll the rooms have been loaded from the database", "green")
+
+            else:
+                cprint("\tNo rooms in the database", "red")
+
+            # Get unallocated
+            if session.query(Unallocated):
+                cprint("\tUpdating list of unallocated people...", "green")
+                for person in session.query(Unallocated):
+                    if person.without_room == "office":
+                        self.people["without_offices"].append(self.get_person_object(person.person_id))
+                    elif person.without_room == "livingspace":
+                        self.people["without_offices"].append(self.get_person_object(person.person_id))
+
+                cprint("\tList of unallocated people has been updated", "green")
+
+            else:
+                cprint("\tThere are no unallocated people in the database", "green")
+        else:
+            cprint("\tThe database {} does not exist.".format(db_name), "red")
+
