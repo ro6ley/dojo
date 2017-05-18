@@ -1,0 +1,8 @@
+.idea/*
+officeenv/*
+__pycache__/
+*.pyc
+htmlcov/
+envdojo/
+.coverage
+*.db
