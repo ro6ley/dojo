@@ -1,6 +1,5 @@
-[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/dojo/badge.svg?branch=version2)](https://coveralls.io/github/NaiRobley/dojo?branch=version2)
-[![Build Status](https://travis-ci.org/NaiRobley/dojo.svg?branch=version2)](https://travis-ci.org/NaiRobley/dojo)
-
+[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/dojo/badge.svg?branch=develop)](https://coveralls.io/github/NaiRobley/dojo?branch=develop)
+[![Build Status](https://travis-ci.org/NaiRobley/dojo.svg?branch=develop)](https://travis-ci.org/NaiRobley/dojo)
 
 # Project - Andela Office Space Allocation  
 
