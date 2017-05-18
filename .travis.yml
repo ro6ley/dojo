@@ -7,7 +7,7 @@ install: "pip install -r requirements.txt"
 
 # --source specifies what packages to cover, you probably want to use that option
 script:
-  coverage run -m unittest
+  coverage run --source="system/","tests/" -m unittest
 
 after_success:
   coveralls
