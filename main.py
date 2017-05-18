@@ -150,7 +150,7 @@ class MyInteractive(cmd.Cmd):
     def do_print_allocations(self, args):
         """Usage: print_allocations [<filename>]"""
         if args["<filename>"]:
-            filename = args["<filename>"]
+            filename = str(args["<filename>"].split(".")[0]) + ".txt"
             print("")
             new_dojo.print_allocations(filename)
         else:
@@ -161,7 +161,7 @@ class MyInteractive(cmd.Cmd):
     def do_print_unallocated(self, args):
         """Usage: print_unallocated [<filename>]"""
         if args["<filename>"]:
-            filename = args["<filename>"]
+            filename = str(args["<filename>"].split(".")[0]) + ".txt"
             print("")
             new_dojo.print_unallocated(filename)
         else:
@@ -193,7 +193,8 @@ class MyInteractive(cmd.Cmd):
     def do_save_state(self, args):
         """Usage: save_state [<sqlite_db_name>]"""
         if args["<sqlite_db_name>"]:
-            new_dojo.save_state(args["<sqlite_db_name>"])
+            db_name = str(args["<sqlite_db_name>"].split(".")[0]) + ".db"
+            new_dojo.save_state(db_name)
         else:
             new_dojo.save_state()
 
@@ -201,7 +202,8 @@ class MyInteractive(cmd.Cmd):
     def do_load_state(self, args):
         """Usage: load_state [<sqlite_db_name>]"""
         if args["<sqlite_db_name>"]:
-            new_dojo.load_state(db_name=args["<sqlite_db_name>"])
+            db_name = str(args["<sqlite_db_name>"].split(".")[0]) + ".db"
+            new_dojo.load_state(db_name)
         else:
             new_dojo.load_state()
 
