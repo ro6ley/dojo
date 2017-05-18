@@ -632,7 +632,7 @@ class Dojo(object):
                     elif person.without_room == "livingspace":
                         self.people["without_offices"].append(self.get_person_object(person.person_id))
 
-                cprint("\tList of unallocated people has been updated")
+                cprint("\tList of unallocated people has been updated", "green")
 
             else:
                 cprint("\tThere are no unallocated people in the database", "green")
