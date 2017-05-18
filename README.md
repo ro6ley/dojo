@@ -1,5 +1,5 @@
-[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/dojo/badge.svg?branch=develop)](https://coveralls.io/github/NaiRobley/dojo?branch=develop)
-[![Build Status](https://travis-ci.org/NaiRobley/dojo.svg?branch=develop)](https://travis-ci.org/NaiRobley/dojo)
+[![Coverage Status](https://coveralls.io/repos/github/NaiRobley/dojo/badge.svg?branch=master)](https://coveralls.io/github/NaiRobley/dojo?branch=master)
+[![Build Status](https://travis-ci.org/NaiRobley/dojo.svg?branch=master)](https://travis-ci.org/NaiRobley/dojo)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d579665683f41088688d2cad5de8d17)](https://www.codacy.com/app/NaiRobley/dojo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=NaiRobley/dojo&amp;utm_campaign=Badge_Grade)
 
 # Project - Andela Office Space Allocation  
