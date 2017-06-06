@@ -20,10 +20,10 @@ class RoomTestCases(unittest.TestCase):
         Tests for the creation of a room and its attributes
         """
         self.assertTrue(self.new_room, None)
-        self.assertEqual(self.new_room.r_name, None)
-        self.assertEqual(self.new_room.r_type, None)
-        self.assertEqual(self.new_room.r_capacity, None)
-        self.assertEqual(self.new_room.r_occupants, [])
+        self.assertEqual(self.new_room.room_name, None)
+        self.assertEqual(self.new_room.room_type, None)
+        self.assertEqual(self.new_room.room_capacity, None)
+        self.assertEqual(self.new_room.room_occupants, [])
         self.assertTrue(isinstance(self.new_room, Room))
 
     def test_office_object(self):
@@ -31,10 +31,10 @@ class RoomTestCases(unittest.TestCase):
         Tests for the creation of an office and its attributes
         """
         self.assertTrue(self.new_office, "Blue")
-        self.assertEqual(self.new_office.r_name, "Blue")
-        self.assertTrue(self.new_office.r_type, "office")
-        self.assertEqual(self.new_office.r_capacity, 6)
-        self.assertEqual(self.new_office.r_occupants, [])
+        self.assertEqual(self.new_office.room_name, "Blue")
+        self.assertTrue(self.new_office.room_type, "office")
+        self.assertEqual(self.new_office.room_capacity, 6)
+        self.assertEqual(self.new_office.room_occupants, [])
         self.assertTrue(isinstance(self.new_office, Office))
 
     def test_livingspace_object(self):
@@ -42,10 +42,10 @@ class RoomTestCases(unittest.TestCase):
         Tests for the creation of a living space and its attributes
         """
         self.assertTrue(self.new_livingspace, "Mara")
-        self.assertEqual(self.new_livingspace.r_name, "Mara")
-        self.assertTrue(self.new_livingspace.r_type, "livingspace")
-        self.assertEqual(self.new_livingspace.r_capacity, 4)
-        self.assertEqual(self.new_livingspace.r_occupants, [])
+        self.assertEqual(self.new_livingspace.room_name, "Mara")
+        self.assertTrue(self.new_livingspace.room_type, "livingspace")
+        self.assertEqual(self.new_livingspace.room_capacity, 4)
+        self.assertEqual(self.new_livingspace.room_occupants, [])
         self.assertTrue(isinstance(self.new_livingspace, LivingSpace))
 
 if __name__ == "__main__":
