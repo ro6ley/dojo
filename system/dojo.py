@@ -680,3 +680,27 @@ class Dojo(object):
                        "green")
         else:
             cprint("\tThe database {} does not exist.".format(db_name), "red")
+
+    def delete_room(self, room_name):
+        """
+        Method to delete a room from the system and add members to list of unallocated
+        """
+        pass
+
+    def remove_person(self, person_id):
+        """
+        Method to remove a person from the system
+        """
+        pass
+
+    def rename_room(self, room_name, new_room_name):
+        """
+        Method to change the name of a room in the system
+        """
+        pass
+
+    def rename_person(self, person_id, new_names):
+        """
+        Method to change the name of a person in the system
+        """
+        pass
