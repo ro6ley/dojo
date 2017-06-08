@@ -359,7 +359,7 @@ class Dojo(object):
         elif person_id not in [person.person_id for person in all_people]:
             return None
 
-    def check_room(self, room_name, person_name):
+    def check_room(self, room_name, person_id):
         """
         Method to check if the room that the person is to be reallocated to
         exists, is vacant and the person is not already in it.
@@ -368,34 +368,34 @@ class Dojo(object):
         if room_name in [room.room_name for room in all_rooms]:
             for room in all_rooms:
                 if room.room_name == room_name and len(room.room_occupants) < \
-                        room.room_capacity and person_name not in \
-                        [person.person_name for person in room.room_occupants]:
+                        room.room_capacity and person_id not in \
+                        [person.person_id for person in room.room_occupants]:
                     return room
                 elif room.room_name == room_name and len(room.room_occupants) \
                         >= room.room_capacity:
                     return "full"
-                elif room.room_name == room_name and person_name in \
-                        [person.person_name for person in room.room_occupants]:
+                elif room.room_name == room_name and person_id in \
+                        [person.person_id for person in room.room_occupants]:
                     return "present"
 
         elif room_name not in [room.room_name for room in all_rooms]:
             return None
 
-    def get_old_office(self, person_name):
+    def get_old_office(self, person_id):
         """
         Method to get the previous office that the person is in
         """
         for room in self.rooms["offices"]:
-            if person_name in [person.person_name for
+            if person_id in [person.person_id for
                                person in room.room_occupants]:
                 return room
 
-    def get_old_livingspace(self, person_name):
+    def get_old_livingspace(self, person_id):
         """
         Method to get the previous living space that the person is in
         """
         for room in self.rooms["livingspaces"]:
-            if person_name in [person.person_name for
+            if person_id in [person.person_id for
                                person in room.room_occupants]:
                 return room
 
@@ -406,9 +406,9 @@ class Dojo(object):
         """
         new_person = self.get_person_object(person_id)
         if new_person is not None:
-            new_room = self.check_room(room_name, new_person.person_name)
-            old_office = self.get_old_office(new_person.person_name)
-            old_livingspace = self.get_old_livingspace(new_person.person_name)
+            new_room = self.check_room(room_name, new_person.person_id)
+            old_office = self.get_old_office(new_person.person_id)
+            old_livingspace = self.get_old_livingspace(new_person.person_id)
 
             if isinstance(new_person, Fellow) or isinstance(new_person, Staff):
                 if new_room != "full" and new_room != "present" and new_room:
