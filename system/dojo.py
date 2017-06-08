@@ -751,4 +751,11 @@ class Dojo(object):
         """
         Method to change the name of a person in the system
         """
-        pass
+        person = self.get_person_object(int(person_id))
+        if person:
+            old_person_name = person.person_name
+            person.person_name = new_names
+            cprint("{0}'s name has been changed to {1}".format(old_person_name, new_names), "green")
+        else:
+            cprint("Sorry. The person with id: {} could not be found. Please check and try again".format(person_id),
+                   "red")
