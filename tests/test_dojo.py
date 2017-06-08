@@ -283,7 +283,8 @@ class DojoTestCases(unittest.TestCase):
 
     def test_remove_person(self):
         """
-        Test that a person can be removed from the dojo and any lists they may be in
+        Test that a person can be removed from the dojo and any lists they may
+         be in
         """
         new_fellow = self.new_dojo.add_person("Robley", "Gori", "fellow")
         new_staff = self.new_dojo.add_person("Faith", "Gori", "staff")
@@ -302,7 +303,8 @@ class DojoTestCases(unittest.TestCase):
 
     def test_delete_room(self):
         """
-        Test that a room can be deleted and all members sent to unallocated list
+        Test that a room can be deleted and all members sent to unallocated
+         list
         """
         self.new_dojo.create_room("Teal", "office")
         self.new_dojo.create_room("Amboseli", "livingspace")
@@ -316,7 +318,8 @@ class DojoTestCases(unittest.TestCase):
 
         # Check if the number of rooms has reduced by one
         self.assertEqual((initial_office_count - new_office_count), 1)
-        self.assertEqual((initial_livingspace_count - new_livingsapce_count), 1)
+        self.assertEqual((initial_livingspace_count - new_livingsapce_count),
+                         1)
 
     def test_rename_room(self):
         """
@@ -328,11 +331,15 @@ class DojoTestCases(unittest.TestCase):
         self.new_dojo.rename_room("Teal", "Greeny")
         self.new_dojo.rename_room("Amboseli", "Ambo")
 
-        self.assertIn("Ambo", [room.room_name for room in self.new_dojo.rooms["livingspaces"]])
-        self.assertIn("Greeny", [room.room_name for room in self.new_dojo.rooms["offices"]])
+        self.assertIn("Ambo", [room.room_name for room in
+                               self.new_dojo.rooms["livingspaces"]])
+        self.assertIn("Greeny", [room.room_name for room in
+                                 self.new_dojo.rooms["offices"]])
 
-        self.assertNotIn("Amboseli", [room.room_name for room in self.new_dojo.rooms["livingspaces"]])
-        self.assertNotIn("Teal", [room.room_name for room in self.new_dojo.rooms["offices"]])
+        self.assertNotIn("Amboseli", [room.room_name for room in
+                                      self.new_dojo.rooms["livingspaces"]])
+        self.assertNotIn("Teal", [room.room_name for room in
+                                  self.new_dojo.rooms["offices"]])
 
     def test_rename_person(self):
         """
@@ -341,8 +348,10 @@ class DojoTestCases(unittest.TestCase):
         new_person = self.new_dojo.add_person("John", "Doe", "fellow")
         self.new_dojo.rename_person(new_person.person_id, "Johnn Doee")
 
-        self.assertIn("Johnn Doee", [person.person_name for person in self.new_dojo.people["fellows"]])
-        self.assertNotIn("John Doe", [person.person_name for person in self.new_dojo.people["fellows"]])
+        self.assertIn("Johnn Doee", [person.person_name for person in
+                                     self.new_dojo.people["fellows"]])
+        self.assertNotIn("John Doe", [person.person_name for person in
+                                      self.new_dojo.people["fellows"]])
 
 
 if __name__ == "__main__":
