@@ -76,6 +76,9 @@ Usage:
     load_people [<filename>]
     get_person_id <person_first_name> <person_last_name>
     reallocate_person <person_id> <room_name>
+    print_vacant_rooms
+    delete_room <room_name>
+    remove_person <person_id>
     load_state [<sqlite_db_name>]
     save_state [<sqlite_db_name>]
     help
