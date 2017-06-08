@@ -711,7 +711,25 @@ class Dojo(object):
         """
         Method to remove a person from the system
         """
-        pass
+        person = self.get_person_object(person_id)
+        if person in self.people["without_livingspaces"]:
+            self.people["without_livingspaces"].pop(self.people["without_livingspaces"].index(person))
+            cprint("{} has been removed from the unallocated list".format(person.person_name), "green")
+        elif person in self.people["without_offices"]:
+            self.people["without_offices"].pop(self.people["without_offices"].index(person))
+            cprint("{} has been removed from the unallocated list".format(person.person_name), "green")
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        for room in all_rooms:
+            if person in room.room_occupants:
+                room.room_occupants.pop(room.room_occupants.index(person))
+                cprint("{0} has been removed from {1}".format(person.person_name, room.room_name), "green")
+
+        if person in self.people["fellows"]:
+            self.people["fellows"].pop(self.people["fellows"].index(person))
+            cprint("{} has been successfully removed from the Dojo".format(person.person_name), "green")
+        elif person in self.people["staff"]:
+            self.people["staff"].pop(self.people["staff"].index(person))
+            cprint("{} has been successfully removed from the Dojo".format(person.person_name), "green")
 
     def rename_room(self, room_name, new_room_name):
         """
