@@ -171,20 +171,19 @@ class DojoTestCases(unittest.TestCase):
         Test that you can get a person old office before reallocating them to
         a new one
         """
-        old_office = self.new_dojo.get_old_office("Another Lady")
-        no_old_office = self.new_dojo.get_old_office("No Guy")
+        another_lady = self.new_dojo.get_person_id("Another Lady")
+        old_office = self.new_dojo.get_old_office(another_lady[0].person_id)
         self.assertTrue(isinstance(old_office, Office))
-        self.assertFalse(no_old_office)
 
     def test_get_old_livingspace(self):
         """
         Test that you can get a person old living space before reallocating
         them to a new one
         """
-        old_livingspace = self.new_dojo.get_old_livingspace("Another Lady")
-        no_old_livingspace = self.new_dojo.get_old_livingspace("No Guy")
+        another_lady = self.new_dojo.get_person_id("Another Lady")
+        old_livingspace = self.new_dojo.get_old_livingspace(
+            another_lady[0].person_id)
         self.assertTrue(isinstance(old_livingspace, LivingSpace))
-        self.assertFalse(no_old_livingspace)
 
     def test_reallocate(self):
         """
