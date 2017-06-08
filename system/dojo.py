@@ -670,7 +670,7 @@ class Dojo(object):
                         self.people["without_offices"].append(
                             self.get_person_object(person.person_id))
                     elif person.without_room == "livingspace":
-                        self.people["without_offices"].append(
+                        self.people["without_livingspaces"].append(
                             self.get_person_object(person.person_id))
 
                 cprint("\tList of unallocated people has been updated",
