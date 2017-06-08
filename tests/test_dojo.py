@@ -332,7 +332,7 @@ class DojoTestCases(unittest.TestCase):
         self.assertIn("Greeny", [room.room_name for room in self.new_dojo.rooms["offices"]])
 
         self.assertNotIn("Amboseli", [room.room_name for room in self.new_dojo.rooms["livingspaces"]])
-        self.assertIn("Teal", [room.room_name for room in self.new_dojo.rooms["offices"]])
+        self.assertNotIn("Teal", [room.room_name for room in self.new_dojo.rooms["offices"]])
 
     def test_rename_person(self):
         """
