@@ -670,7 +670,7 @@ class Dojo(object):
                         self.people["without_offices"].append(
                             self.get_person_object(person.person_id))
                     elif person.without_room == "livingspace":
-                        self.people["without_offices"].append(
+                        self.people["without_livingspaces"].append(
                             self.get_person_object(person.person_id))
 
                 cprint("\tList of unallocated people has been updated",
@@ -683,9 +683,29 @@ class Dojo(object):
 
     def delete_room(self, room_name):
         """
-        Method to delete a room from the system and add members to list of unallocated
+        Method to delete a room from the system and add members
+        to list of unallocated
         """
-        pass
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if room_name in [room.room_name for room in all_rooms]:
+            for room in all_rooms:
+                if room.room_name == room_name and room.room_type == "office":
+                    for member in room.room_occupants:
+                        self.people["without_offices"].append(member)
+                    self.rooms["offices"].pop(self.rooms["offices"].index(room))
+                    cprint(
+                        "The office {} has been deleted successfully. All members have been added to the list of unallocated members".format(
+                            room_name), "green")
+                elif room.room_name == room_name and room.room_type == "livingspace":
+                    for member in room.room_occupants:
+                        self.people["without_livingspaces"].append(member)
+                    self.rooms["livingspaces"].pop(self.rooms["livingspaces"].index(room))
+                    cprint(
+                        "The livingspace {} has been deleted successfully. All members have been added to the list of unallocated members".format(
+                            room_name), "green")
+
+        else:
+            cprint("Sorry. That room does not exist. Please try again.", "red")
 
     def remove_person(self, person_id):
         """
