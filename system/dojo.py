@@ -18,7 +18,6 @@ class Dojo(object):
     """
     Main dojo class that manages the system and the data
     """
-
     def __init__(self):
         self.people = {
             "fellows": [],
@@ -339,7 +338,7 @@ class Dojo(object):
             return staff
 
         elif person_name not in [p.person_name for p in
-                                 self.people["fellows"]] or person_name not in \
+                                 self.people["fellows"]] or person_name not in\
                 [p.person_name for p in self.people["staff"]]:
             cprint("{} does not exist in the system. \
                 Please add them first to get their id.".format(person_name),
@@ -360,7 +359,7 @@ class Dojo(object):
         elif person_id not in [person.person_id for person in all_people]:
             return None
 
-    def check_room(self, room_name, person_name):
+    def check_room(self, room_name, person_id):
         """
         Method to check if the room that the person is to be reallocated to
         exists, is vacant and the person is not already in it.
@@ -369,34 +368,34 @@ class Dojo(object):
         if room_name in [room.room_name for room in all_rooms]:
             for room in all_rooms:
                 if room.room_name == room_name and len(room.room_occupants) < \
-                        room.room_capacity and person_name not in \
-                        [person.person_name for person in room.room_occupants]:
+                        room.room_capacity and person_id not in \
+                        [person.person_id for person in room.room_occupants]:
                     return room
                 elif room.room_name == room_name and len(room.room_occupants) \
                         >= room.room_capacity:
                     return "full"
-                elif room.room_name == room_name and person_name in \
-                        [person.person_name for person in room.room_occupants]:
+                elif room.room_name == room_name and person_id in \
+                        [person.person_id for person in room.room_occupants]:
                     return "present"
 
         elif room_name not in [room.room_name for room in all_rooms]:
             return None
 
-    def get_old_office(self, person_name):
+    def get_old_office(self, person_id):
         """
         Method to get the previous office that the person is in
         """
         for room in self.rooms["offices"]:
-            if person_name in [person.person_name for
+            if person_id in [person.person_id for
                                person in room.room_occupants]:
                 return room
 
-    def get_old_livingspace(self, person_name):
+    def get_old_livingspace(self, person_id):
         """
         Method to get the previous living space that the person is in
         """
         for room in self.rooms["livingspaces"]:
-            if person_name in [person.person_name for
+            if person_id in [person.person_id for
                                person in room.room_occupants]:
                 return room
 
@@ -407,9 +406,9 @@ class Dojo(object):
         """
         new_person = self.get_person_object(person_id)
         if new_person is not None:
-            new_room = self.check_room(room_name, new_person.person_name)
-            old_office = self.get_old_office(new_person.person_name)
-            old_livingspace = self.get_old_livingspace(new_person.person_name)
+            new_room = self.check_room(room_name, new_person.person_id)
+            old_office = self.get_old_office(new_person.person_id)
+            old_livingspace = self.get_old_livingspace(new_person.person_id)
 
             if isinstance(new_person, Fellow) or isinstance(new_person, Staff):
                 if new_room != "full" and new_room != "present" and new_room:
@@ -419,7 +418,8 @@ class Dojo(object):
                                    "red")
                         elif isinstance(new_person, Fellow):
                             if isinstance(old_livingspace, LivingSpace) and \
-                                            new_person in old_livingspace.room_occupants:
+                                            new_person in \
+                                            old_livingspace.room_occupants:
                                 new_room.room_occupants.append(
                                     old_livingspace.room_occupants.pop(
                                         old_livingspace.room_occupants.index(
@@ -680,3 +680,97 @@ class Dojo(object):
                        "green")
         else:
             cprint("\tThe database {} does not exist.".format(db_name), "red")
+
+    def delete_room(self, room_name):
+        """
+        Method to delete a room from the system and add members
+        to list of unallocated
+        """
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if room_name in [room.room_name for room in all_rooms]:
+            for room in all_rooms:
+                if room.room_name == room_name and room.room_type == "office":
+                    for member in room.room_occupants:
+                        self.people["without_offices"].append(member)
+                    self.rooms["offices"].pop(
+                        self.rooms["offices"].index(room))
+                    cprint("The office {} has been deleted successfully. All"
+                           "members have been added to the list of unallocated"
+                           "members".format(room_name), "green")
+                elif room.room_name == room_name and \
+                        room.room_type == "livingspace":
+                    for member in room.room_occupants:
+                        self.people["without_livingspaces"].append(member)
+                    self.rooms["livingspaces"].pop(
+                        self.rooms["livingspaces"].index(room))
+                    cprint("The livingspace {} has been deleted successfully."
+                           "All members have been added to the list of "
+                           "unallocated members".format(room_name), "green")
+
+        else:
+            cprint("Sorry. That room does not exist. Please try again.", "red")
+
+    def remove_person(self, person_id):
+        """
+        Method to remove a person from the system
+        """
+        person = self.get_person_object(int(person_id))
+        if person:
+            if person in self.people["without_livingspaces"]:
+                self.people["without_livingspaces"].pop(
+                    self.people["without_livingspaces"].index(person))
+                cprint("{} has been removed from the unallocated list"
+                       .format(person.person_name), "green")
+            elif person in self.people["without_offices"]:
+                self.people["without_offices"].pop(
+                    self.people["without_offices"].index(person))
+                cprint("{} has been removed from the unallocated list".
+                       format(person.person_name), "green")
+            all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+            for room in all_rooms:
+                if person in room.room_occupants:
+                    room.room_occupants.pop(room.room_occupants.index(person))
+                    cprint("{0} has been removed from {1}".format(
+                        person.person_name, room.room_name), "green")
+
+            if person in self.people["fellows"]:
+                self.people["fellows"].pop(
+                    self.people["fellows"].index(person))
+                cprint("{} has been successfully removed from the Dojo".
+                       format(person.person_name), "green")
+            elif person in self.people["staff"]:
+                self.people["staff"].pop(self.people["staff"].index(person))
+                cprint("{} has been successfully removed from the Dojo".
+                       format(person.person_name), "green")
+        else:
+            cprint("Sorry. The person with id: {} could not be found."
+                   "Please check and try again".format(person_id), "red")
+
+    def rename_room(self, room_name, new_room_name):
+        """
+        Method to change the name of a room in the system
+        """
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if room_name in [room.room_name for room in all_rooms]:
+            for room in all_rooms:
+                if room.room_name == room_name:
+                    room.room_name = new_room_name
+                    cprint("{0} has been successfully renamed to {1}".
+                           format(room_name, new_room_name))
+        else:
+            cprint("Sorry. {} could not be found. Try again".format(room_name),
+                   "red")
+
+    def rename_person(self, person_id, new_names):
+        """
+        Method to change the name of a person in the system
+        """
+        person = self.get_person_object(int(person_id))
+        if person:
+            old_person_name = person.person_name
+            person.person_name = new_names
+            cprint("{0}'s name has been changed to {1}".
+                   format(old_person_name, new_names), "green")
+        else:
+            cprint("Sorry. The person with id: {} could not be found."
+                   "Please check and try again".format(person_id), "red")
