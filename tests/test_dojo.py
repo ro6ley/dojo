@@ -303,10 +303,10 @@ class DojoTestCases(unittest.TestCase):
         """
         Test that a room can be deleted and all members sent to unallocated list
         """
-        initial_office_count = len(self.new_dojo.rooms["offices"])
-        initial_livingspace_count = len(self.new_dojo.rooms["livingspaces"])
         self.new_dojo.create_room("Teal", "office")
         self.new_dojo.create_room("Amboseli", "livingspace")
+        initial_office_count = len(self.new_dojo.rooms["offices"])
+        initial_livingspace_count = len(self.new_dojo.rooms["livingspaces"])
         self.new_dojo.delete_room("Teal")
         self.new_dojo.delete_room("Amboseli")
 
