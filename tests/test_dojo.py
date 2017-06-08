@@ -338,7 +338,7 @@ class DojoTestCases(unittest.TestCase):
         """
         Test that a person's name can be edited
         """
-        new_person = self.new_dojo.add_person("John", "Doe", "Fellow")
+        new_person = self.new_dojo.add_person("John", "Doe", "fellow")
         self.new_dojo.rename_person(new_person.person_id, "Johnn Doee")
 
         self.assertIn("Johnn Doee", [person.person_name for person in self.new_dojo.people["fellows"]])
