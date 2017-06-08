@@ -738,7 +738,14 @@ class Dojo(object):
         """
         Method to change the name of a room in the system
         """
-        pass
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if room_name in [room.room_name for room in all_rooms]:
+            for room in all_rooms:
+                if room.room_name == room_name:
+                    room.room_name = new_room_name
+                    cprint("{0} has been successfully renamed to {1}".format(room_name, new_room_name))
+        else:
+            cprint("Sorry. {} could not be found. Try again".format(room_name), "red")
 
     def rename_person(self, person_id, new_names):
         """
