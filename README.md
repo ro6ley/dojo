@@ -79,6 +79,8 @@ Usage:
     print_vacant_rooms
     delete_room <room_name>
     remove_person <person_id>
+    rename_room <room_name> <new_room_name>
+    rename_person <person_id> <new_first_name> <new_last_name>
     load_state [<sqlite_db_name>]
     save_state [<sqlite_db_name>]
     help
