@@ -19,6 +19,7 @@ class DojoTestCases(unittest.TestCase):
         self.new_dojo.create_room("Blue", "office")
         self.new_dojo.create_room("Mara", "livingspace")
         self.new_dojo.add_person("Another", "Lady", "fellow", True)
+        self.new_dojo.add_person("Another", "Guy", "staff")
 
     def test_create_room(self):
         """
@@ -284,11 +285,11 @@ class DojoTestCases(unittest.TestCase):
         """
         Test that a person can be removed from the dojo and any lists they may be in
         """
-        new_fellow = self.new_dojo.add_person("Robley", "Gori", "Fellow")
-        new_staff = self.new_dojo.add_person("Sharon", "Waithira", "Staff")
+        new_fellow = self.new_dojo.add_person("Robley", "Gori", "fellow")
+        new_staff = self.new_dojo.add_person("Faith", "Gori", "staff")
+
         initial_fellow_count = len(self.new_dojo.people["fellows"])
         initial_staff_count = len(self.new_dojo.people["staff"])
-
         # Remove the newly created people
         self.new_dojo.remove_person(new_fellow.person_id)
         self.new_dojo.remove_person(new_staff.person_id)
