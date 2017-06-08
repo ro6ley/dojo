@@ -19,6 +19,7 @@ Usage:
     dojo load_people [<filename>]
     dojo get_person_id <person_first_name> <person_last_name>
     dojo reallocate_person <person_id> <room_name>
+    dojo delete_room <room_name>
     dojo load_state [<sqlite_db_name>]
     dojo save_state [<sqlite_db_name>]
     dojo (-i | --interactive)
@@ -212,6 +213,11 @@ class MyInteractive(cmd.Cmd):
             new_dojo.load_state(db_name)
         else:
             new_dojo.load_state()
+
+    @docopt_cmd
+    def do_delete_room(self, args):
+        """Usage: delete_room <room_name>"""
+        new_dojo.delete_room(args["<room_name>"])
 
     @docopt_cmd
     def do_version(self, args):
