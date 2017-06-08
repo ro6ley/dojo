@@ -102,9 +102,6 @@ Options:
 
 **Contributions are highly welcomed and appreciated**
 
-## Deployment
-Coming soon
-
 ## Libraries
 [Docopt](https://github.com/docopt/docopt) - Docopt helps you create most beautiful command-line interfaces
 
@@ -120,5 +117,3 @@ Coming soon
 
 * The Internet
 
-## Additional resources
-Coming soon
