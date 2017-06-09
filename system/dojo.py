@@ -491,7 +491,9 @@ class Dojo(object):
                             "..", "input_files", filename)
         try:
             input_file = open(file, "r")
-            if input_file:
+            # Will return None if file is empty
+            content = input_file.read(1)
+            if input_file and content:
                 for line in input_file:
                     first_name = line.split()[0]
                     last_name = line.split()[1]
@@ -513,7 +515,7 @@ class Dojo(object):
                                         person_type="staff")
                         print("")
             else:
-                cprint("The filename you provided is empty."
+                cprint("The file you provided is empty."
                        "Please check and try again.", "red")
 
         except FileNotFoundError:
