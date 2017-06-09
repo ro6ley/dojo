@@ -1,4 +1,7 @@
-class Room(object):
+from abc import ABCMeta, abstractmethod
+
+
+class Room(metaclass=ABCMeta):
     """Class to create a room object. Inherited by Office and LivingSpace"""
 
     def __init__(self, room_name=None, room_type=None, room_capacity=None,
@@ -8,6 +11,7 @@ class Room(object):
         self.room_capacity = room_capacity
         self.room_occupants = room_occupants
 
+    @abstractmethod
     def __repr__(self):
         return "{}".format(self.room_name)
 
