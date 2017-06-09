@@ -18,6 +18,7 @@ Usage:
     dojo print_vacant_rooms
     dojo load_people [<filename>]
     dojo get_person_id <person_first_name> <person_last_name>
+    dojo allocate_person <person_id> <room_type>
     dojo reallocate_person <person_id> <room_name>
     dojo delete_room <room_name>
     dojo remove_person <person_id>
@@ -192,6 +193,18 @@ class MyInteractive(cmd.Cmd):
         p_name = args["<person_first_name>"] + " " + args["<person_last_name>"]
         new_dojo.get_person_id(p_name)
 
+    @docopt_cmd
+    def do_allocate_person(self, args):
+        """Usage: allocate_person <person_id> <room_type>"""
+        room_type = args["<room_type>"]
+        person_id = int(args["<person_id>"])
+        if room_type.lower() == "office":
+            new_dojo.allocate_person(person_id, "office")
+        elif room_type.lower() == "livingspace":
+            new_dojo.allocate_person(person_id, "livingspace")
+        else:
+            cprint("Please check the room type you entered and try again",
+                   "red")
     @docopt_cmd
     def do_reallocate_person(self, args):
         """Usage: reallocate_person <person_id> <room_name>"""
