@@ -265,8 +265,8 @@ class DojoTestCases(unittest.TestCase):
 
         # Assert that the number of people and rooms in database is
         # equal to the number that we created when setting up the class
-        self.assertEqual(5, total_rooms)
-        self.assertEqual(4, total_people)
+        self.assertEqual(3, total_rooms)
+        self.assertEqual(2, total_people)
 
         # Check if our created office was saved and retrieved
         loaded_offices = [office.room_name for office in
