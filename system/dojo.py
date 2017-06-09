@@ -391,7 +391,7 @@ class Dojo(object):
         """
         for room in self.rooms["offices"]:
             if person_id in [person.person_id for
-                               person in room.room_occupants]:
+                             person in room.room_occupants]:
                 return room
 
     def get_old_livingspace(self, person_id):
@@ -400,7 +400,7 @@ class Dojo(object):
         """
         for room in self.rooms["livingspaces"]:
             if person_id in [person.person_id for
-                               person in room.room_occupants]:
+                             person in room.room_occupants]:
                 return room
 
     def allocate_person(self, person_id, room_type):
@@ -417,14 +417,14 @@ class Dojo(object):
                         self.people["without_livingspaces"].remove(person)
                         self.people["with_livingspaces"].append(person)
                         cprint(
-                            "{0} has been allocated the living space {1}.".format(
-                                person.person_name, livingspace.room_name),
+                            "{0} has been allocated the living space {1}.".
+                            format(person.person_name, livingspace.room_name),
                             "green")
                     else:
                         cprint("Sorry."
                                "No living space is currently available for {}."
                                "Please try again later".format(
-                            person.person_name),
+                                person.person_name),
                                "red")
                 else:
                     cprint("Sorry. {} already has a livingspace. Reallocate "
@@ -438,13 +438,14 @@ class Dojo(object):
                         self.people["without_offices"].remove(person)
                         self.people["with_offices"].append(person)
                         cprint(
-                            "{0} has been allocated the living space {1}.".format(
-                                person.person_name, office.room_name), "green")
+                            "{0} has been allocated the living space {1}.".
+                            format(person.person_name, office.room_name),
+                            "green")
                     else:
                         cprint("Sorry."
                                "No living space is currently available for {}."
                                "Please try again later".format(
-                            person.person_name),
+                                person.person_name),
                                "red")
                 else:
                     cprint("Sorry. {} already has an office. Reallocate "
@@ -542,8 +543,8 @@ class Dojo(object):
         try:
             input_file = open(file, "r")
             # Will return None if file is empty
-            content = input_file.read(1)
-            if input_file and content:
+            # content = input_file.readlines()
+            if input_file and os.path.getsize(file) > 0:
                 for line in input_file:
                     first_name = line.split()[0]
                     last_name = line.split()[1]
@@ -571,6 +572,19 @@ class Dojo(object):
         except FileNotFoundError:
             cprint("\tThe file {} was not found. Check and try again"
                    .format(filename), "red")
+
+    def get_room_object(self, room_name):
+        """
+        Method to find a room and return it
+        """
+        all_rooms = self.rooms["offices"] + self.rooms["livingspaces"]
+        if room_name in [room.room_name for room in all_rooms]:
+            for room in all_rooms:
+                if room.room_name == room_name:
+                    return room
+
+        else:
+            return None
 
     def save_state(self, db_name="dojo.db"):
         """Method to save details to db using SQL"""
@@ -652,14 +666,20 @@ class Dojo(object):
 
             # Get people
             if session.query(People):
+                all_fellows = [fellow.person_id for fellow
+                               in self.people["fellows"]]
+                all_staff = [staff.person_id for staff in self.people["staff"]]
                 cprint("\tLoading people from the database...", "green")
                 for person in session.query(People):
-                    if person.person_type == "fellow":
+                    if person.person_type == "fellow" and \
+                                    person.person_id not in all_fellows:
                         # Recreate the fellow
                         old_fellow = Fellow(person.names, person_type="fellow")
                         old_fellow.person_id = person.person_id
                         self.people["fellows"].append(old_fellow)
-                    elif person.person_type == "staff":
+
+                    elif person.person_type == "staff" \
+                            and person.person_id not in all_staff:
                         # Recreate the staff
                         old_staff = Staff(person.names, person_type="staff")
                         old_staff.person_id = person.person_id
@@ -672,9 +692,14 @@ class Dojo(object):
 
             # Get rooms
             if session.query(Rooms):
+                current_offices = [room.room_name for room in
+                                   self.rooms["offices"]]
+                current_livingspaces = [room.room_name for room in
+                                        self.rooms["livingspaces"]]
                 cprint("\tLoading rooms from the database...", "green")
                 for room in session.query(Rooms):
-                    if room.room_type == "office":
+                    if room.room_type == "office" and room.room_name not in \
+                            current_offices:
                         # Create the offices
                         old_office = Office(room.room_name,
                                             room_capacity=room.room_capacity)
@@ -683,12 +708,31 @@ class Dojo(object):
                                    room.room_occupants.split(",") if person_id]
                         if len(members) > 0:
                             for member in members:
-                                old_office.room_occupants.append(
-                                    self.get_person_object(member))
+                                person = self.get_person_object(member)
+                                old_office.room_occupants.append(person)
 
-                            self.rooms["offices"].append(old_office)
+                        self.rooms["offices"].append(old_office)
 
-                    elif room.room_type == "livingspace":
+                    elif room.room_type == "office" and room.room_name in \
+                            current_offices:
+                        current_room = self.get_room_object(room.room_name)
+                        members = [int(person_id) for person_id in
+                                   room.room_occupants.split(",") if person_id]
+                        if len(members) > 0:
+                            for member in members:
+                                person = self.get_person_object(member)
+                                if len(current_room.room_occupants) < \
+                                        current_room.room_capacity and person \
+                                        not in current_room.room_occupants:
+                                    current_room.room_occupants.append(person)
+                                elif len(current_room.room_occupants) >= \
+                                        current_room.room_capacity and person \
+                                        not in current_room.room_occupants:
+                                    self.people["without_offices"].\
+                                        append(person)
+
+                    elif room.room_type == "livingspace" and room.room_name \
+                            not in current_livingspaces:
                         # Create the offices
                         old_livingspace = LivingSpace(
                             room.room_name, room_capacity=room.room_capacity)
@@ -697,10 +741,28 @@ class Dojo(object):
                                    room.room_occupants.split(",") if person_id]
                         if len(members) > 0:
                             for member in members:
-                                old_livingspace.room_occupants.append(
-                                    self.get_person_object(member))
+                                person = self.get_person_object(member)
+                                old_livingspace.room_occupants.append(person)
 
                         self.rooms["livingspaces"].append(old_livingspace)
+
+                    elif room.room_type == "livingspace" and room.room_name in\
+                            current_livingspaces:
+                        current_room = self.get_room_object(room.room_name)
+                        members = [int(person_id) for person_id in
+                                   room.room_occupants.split(",") if person_id]
+                        if len(members) > 0:
+                            for member in members:
+                                person = self.get_person_object(member)
+                                if len(current_room.room_occupants) < \
+                                        current_room.room_capacity and person \
+                                        not in current_room.room_occupants:
+                                    current_room.room_occupants.append(person)
+                                elif len(current_room.room_occupants) >= \
+                                        current_room.room_capacity and person \
+                                        not in current_room.room_occupants:
+                                    self.people["without_livingspaces"].\
+                                        append(person)
 
                 cprint("\tAll the rooms have been loaded from the database",
                        "green")
@@ -710,14 +772,21 @@ class Dojo(object):
 
             # Get unallocated
             if session.query(Unallocated):
+                without_offices = [person.person_id for person in
+                                   self.people["without_offices"]]
+                without_livingspaces = [person.person_id for person in
+                                        self.people["without_livingspaces"]]
                 cprint("\tUpdating list of unallocated people...", "green")
                 for person in session.query(Unallocated):
-                    if person.without_room == "office":
-                        self.people["without_offices"].append(
-                            self.get_person_object(person.person_id))
-                    elif person.without_room == "livingspace":
-                        self.people["without_livingspaces"].append(
-                            self.get_person_object(person.person_id))
+                    member = self.get_person_object(person.person_id)
+                    if person.without_room == "office" and \
+                            person.person_id not in without_offices:
+                        if member not in self.people["without_offices"]:
+                            self.people["without_offices"].append(member)
+                    elif person.without_room == "livingspace" \
+                            and person.person_id not in without_livingspaces:
+                        if member not in self.people["without_livingspaces"]:
+                            self.people["without_livingspaces"].append(member)
 
                 cprint("\tList of unallocated people has been updated",
                        "green")
