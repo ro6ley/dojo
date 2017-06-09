@@ -403,6 +403,57 @@ class Dojo(object):
                                person in room.room_occupants]:
                 return room
 
+    def allocate_person(self, person_id, room_type):
+        """
+        Method to allocate a person to an available room randomly
+        """
+        person = self.get_person_object(person_id)
+        if person:
+            if room_type is "livingspace":
+                if person in self.people["without_livingspaces"]:
+                    livingspace = self.get_random_room("livingspace")
+                    if livingspace is not None:
+                        livingspace.room_occupants.append(person)
+                        self.people["without_livingspaces"].remove(person)
+                        self.people["with_livingspaces"].append(person)
+                        cprint(
+                            "{0} has been allocated the living space {1}.".format(
+                                person.person_name, livingspace.room_name),
+                            "green")
+                    else:
+                        cprint("Sorry."
+                               "No living space is currently available for {}."
+                               "Please try again later".format(
+                            person.person_name),
+                               "red")
+                else:
+                    cprint("Sorry. {} already has a livingspace. Reallocate "
+                           "them instead".format(person.person_name), "red")
+
+            elif room_type is "office":
+                if person in self.people["without_offices"]:
+                    office = self.get_random_room("office")
+                    if office is not None:
+                        office.room_occupants.append(person)
+                        self.people["without_offices"].remove(person)
+                        self.people["with_offices"].append(person)
+                        cprint(
+                            "{0} has been allocated the living space {1}.".format(
+                                person.person_name, office.room_name), "green")
+                    else:
+                        cprint("Sorry."
+                               "No living space is currently available for {}."
+                               "Please try again later".format(
+                            person.person_name),
+                               "red")
+                else:
+                    cprint("Sorry. {} already has an office. Reallocate "
+                           "them instead".format(person.person_name), "red")
+
+        elif person is None:
+            cprint("Error. {} cannot be found in the system. Check and try"
+                   " again".format(person_id), "red")
+
     def reallocate_person(self, person_id, room_name):
         """
         Method to reallocate an individual from one room to another using their
@@ -435,13 +486,9 @@ class Dojo(object):
                                         old_livingspace.room_name), "green")
                             elif new_person in \
                                     self.people["without_livingspaces"]:
-                                self.people["without_livingspaces"].remove(
-                                    new_person)
-                                new_room.room_occupants.append(new_person)
-                                cprint("{0} has been reallocated "
-                                       "to {1} from unallocated".format(
-                                        new_person.person_name, room_name),
-                                       "green")
+                                cprint("{0} cannot be reallocated. "
+                                       "Allocate them a room first".format(
+                                        new_person.person_name), "red")
                             else:
                                 cprint("{} has not been reallocated.".format(
                                     new_person.person_name), "green")
@@ -457,10 +504,9 @@ class Dojo(object):
                                    format(new_person.person_name, room_name,
                                           old_office.room_name), "green")
                         elif new_person in self.people["without_offices"]:
-                            self.people["without_offices"].remove(new_person)
-                            new_room.room_occupants.append(new_person)
-                            cprint("{0} has been reallocated to {1}".format(
-                                new_person.person_name, room_name), "green")
+                            cprint("{0} cannot be reallocated. "
+                                   "Allocate them a room first".format(
+                                        new_person.person_name), "red")
                         else:
                             cprint("{} has not been reallocated.".format(
                                 new_person.person_name), "red")
@@ -642,9 +688,6 @@ class Dojo(object):
 
                             self.rooms["offices"].append(old_office)
 
-                        cprint("\tAll offices have been loaded to the system",
-                               "green")
-
                     elif room.room_type == "livingspace":
                         # Create the offices
                         old_livingspace = LivingSpace(
@@ -659,10 +702,6 @@ class Dojo(object):
 
                         self.rooms["livingspaces"].append(old_livingspace)
 
-                        cprint("\tAll living spaces have been \
-                        loaded to the system", "green")
-
-                    print("")
                 cprint("\tAll the rooms have been loaded from the database",
                        "green")
 
