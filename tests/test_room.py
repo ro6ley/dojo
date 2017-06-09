@@ -2,7 +2,7 @@ import unittest
 import sys
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from system.room import Room, Office, LivingSpace
+from system.room import Office, LivingSpace
 
 
 class RoomTestCases(unittest.TestCase):
@@ -11,20 +11,8 @@ class RoomTestCases(unittest.TestCase):
     """
     def setUp(self):
         # set up the objects
-        self.new_room = Room()
         self.new_office = Office("Blue")
         self.new_livingspace = LivingSpace("Mara")
-
-    def test_room_object(self):
-        """
-        Tests for the creation of a room and its attributes
-        """
-        self.assertTrue(self.new_room, None)
-        self.assertEqual(self.new_room.room_name, None)
-        self.assertEqual(self.new_room.room_type, None)
-        self.assertEqual(self.new_room.room_capacity, None)
-        self.assertEqual(self.new_room.room_occupants, [])
-        self.assertTrue(isinstance(self.new_room, Room))
 
     def test_office_object(self):
         """
