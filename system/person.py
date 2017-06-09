@@ -1,10 +1,14 @@
-class Person(object):
+from abc import ABCMeta, abstractmethod
+
+
+class Person(metaclass=ABCMeta):
     """Class to create a person object. Inherited by Fellow and Person"""
     def __init__(self, person_name=None, person_type=None):
         self.person_name = person_name
         self.person_type = person_type
         self.person_id = id(self)
 
+    @abstractmethod
     def __repr__(self):
         return "{}".format(self.person_name)
 
