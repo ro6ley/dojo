@@ -201,9 +201,9 @@ class Dojo(object):
                 file = os.path.join(
                     os.path.dirname(os.path.realpath(__file__)),
                     "..", "output_files", filename)
-                f = open(file, "w+")
-                f.write(output)
-                f.close()
+                output_file = open(file, "w+")
+                output_file.write(output)
+                output_file.close()
                 cprint("The allocations have been printed to the file - {}".
                        format(filename), "yellow")
 
@@ -249,9 +249,9 @@ class Dojo(object):
         if filename:
             file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                 "..", "output_files", filename)
-            f = open(file, "w+")
-            f.write(output)
-            f.close()
+            output_file = open(file, "w+")
+            output_file.write(output)
+            output_file.close()
             cprint("The allocations have been printed to the file - {}".format(
                 filename), "yellow")
 
@@ -411,7 +411,8 @@ class Dojo(object):
             old_livingspace = self.get_old_livingspace(new_person.person_id)
 
             if isinstance(new_person, Fellow) or isinstance(new_person, Staff):
-                if new_room != "full" and new_room != "present" and new_room:
+                if new_room is not "full" and new_room is not "present" and \
+                        new_room:
                     if isinstance(new_room, LivingSpace):
                         if isinstance(new_person, Staff):
                             cprint("Cannot reallocate staff to a living space",
@@ -460,11 +461,11 @@ class Dojo(object):
                             cprint("{} has not been reallocated.".format(
                                 new_person.person_name), "red")
 
-                elif new_room == "full":
+                elif new_room is "full":
                     cprint("Sorry. {} is already full".format(room_name),
                            "red")
 
-                elif new_room == "present":
+                elif new_room is "present":
                     cprint("Sorry. {0} is already in room {1}".format(
                         new_person.person_name, room_name), "red")
 
@@ -489,9 +490,9 @@ class Dojo(object):
         file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                             "..", "input_files", filename)
         try:
-            f = open(file, "r")
-            if f:
-                for line in f:
+            input_file = open(file, "r")
+            if input_file:
+                for line in input_file:
                     first_name = line.split()[0]
                     last_name = line.split()[1]
                     person_name = first_name + " " + last_name
