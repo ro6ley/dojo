@@ -229,7 +229,7 @@ class Dojo(object):
                 print("")
                 output += "\t{0} - {1}\n".format(person.person_name,
                                                  person.person_type)
-        elif not self.people["without_livingspaces"]:
+        elif not self.people["without_livingspaces"] and self.people["fellows"]:
             cprint("Every fellow has a living space in the Dojo.\n", "green")
             output += "Every fellow has a living space in the Dojo.\n\n"
 
@@ -242,9 +242,13 @@ class Dojo(object):
                 print("")
                 output += "\t{0} - {1}\n".format(person.person_name,
                                                  person.person_type)
-        elif not self.people["without_offices"]:
+        elif not self.people["without_offices"] and self.people["fellows"] or\
+                self.people["staff"]:
             cprint("Everyone has an office in the Dojo.\n", "green")
             output += "Everyone has an office in the Dojo.\n"
+
+        else:
+            cprint("There are no people in the Dojo currently.", "red")
 
         if filename:
             file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
