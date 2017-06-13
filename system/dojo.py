@@ -542,8 +542,6 @@ class Dojo(object):
                             "..", "input_files", filename)
         try:
             input_file = open(file, "r")
-            # Will return None if file is empty
-            # content = input_file.readlines()
             if input_file and os.path.getsize(file) > 0:
                 for line in input_file:
                     first_name = line.split()[0]
