@@ -76,6 +76,11 @@ Usage:
     load_people [<filename>]
     get_person_id <person_first_name> <person_last_name>
     reallocate_person <person_id> <room_name>
+    print_vacant_rooms
+    delete_room <room_name>
+    remove_person <person_id>
+    rename_room <room_name> <new_room_name>
+    rename_person <person_id> <new_first_name> <new_last_name>
     load_state [<sqlite_db_name>]
     save_state [<sqlite_db_name>]
     help
@@ -97,9 +102,6 @@ Options:
 
 **Contributions are highly welcomed and appreciated**
 
-## Deployment
-Coming soon
-
 ## Libraries
 [Docopt](https://github.com/docopt/docopt) - Docopt helps you create most beautiful command-line interfaces
 
@@ -115,5 +117,3 @@ Coming soon
 
 * The Internet
 
-## Additional resources
-Coming soon

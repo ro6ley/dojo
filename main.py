@@ -18,7 +18,12 @@ Usage:
     dojo print_vacant_rooms
     dojo load_people [<filename>]
     dojo get_person_id <person_first_name> <person_last_name>
+    dojo allocate_person <person_id> <room_type>
     dojo reallocate_person <person_id> <room_name>
+    dojo delete_room <room_name>
+    dojo remove_person <person_id>
+    dojo rename_room <room_name> <new_room_name>
+    dojo rename_person <person_id> <new_first_name> <new_last_name>
     dojo load_state [<sqlite_db_name>]
     dojo save_state [<sqlite_db_name>]
     dojo (-i | --interactive)
@@ -189,6 +194,18 @@ class MyInteractive(cmd.Cmd):
         new_dojo.get_person_id(p_name)
 
     @docopt_cmd
+    def do_allocate_person(self, args):
+        """Usage: allocate_person <person_id> <room_type>"""
+        room_type = args["<room_type>"]
+        person_id = int(args["<person_id>"])
+        if room_type.lower() == "office":
+            new_dojo.allocate_person(person_id, "office")
+        elif room_type.lower() == "livingspace":
+            new_dojo.allocate_person(person_id, "livingspace")
+        else:
+            cprint("Please check the room type you entered and try again",
+                   "red")
+    @docopt_cmd
     def do_reallocate_person(self, args):
         """Usage: reallocate_person <person_id> <room_name>"""
         p_id = int(args["<person_id>"])
@@ -212,6 +229,27 @@ class MyInteractive(cmd.Cmd):
             new_dojo.load_state(db_name)
         else:
             new_dojo.load_state()
+
+    @docopt_cmd
+    def do_delete_room(self, args):
+        """Usage: delete_room <room_name>"""
+        new_dojo.delete_room(args["<room_name>"])
+
+    @docopt_cmd
+    def do_remove_person(self, args):
+        """Usage: remove_person <person_id>"""
+        new_dojo.remove_person(args["<person_id>"])
+
+    @docopt_cmd
+    def do_rename_room(self, args):
+        """Usage: rename_room <room_name> <new_room_name>"""
+        new_dojo.rename_room(args["<room_name>"], args["<new_room_name>"])
+
+    @docopt_cmd
+    def do_rename_person(self, args):
+        """Usage: rename_person <person_id> <new_first_name> <new_last_name>"""
+        new_name = args["<new_first_name>"] + ' ' + args["<new_last_name>"]
+        new_dojo.rename_person(args["<person_id>"], new_name)
 
     @docopt_cmd
     def do_version(self, args):

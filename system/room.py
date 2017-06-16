@@ -1,31 +1,36 @@
-class Room(object):
+from abc import ABCMeta, abstractmethod
+
+
+class Room(metaclass=ABCMeta):
     """Class to create a room object. Inherited by Office and LivingSpace"""
 
-    def __init__(self, r_name=None, r_type=None, r_capacity=None, r_occupants=[]):
-        self.r_name = r_name
-        self.r_type = r_type
-        self.r_capacity = r_capacity
-        self.r_occupants = r_occupants
+    def __init__(self, room_name=None, room_type=None, room_capacity=None,
+                 room_occupants=[]):
+        self.room_name = room_name
+        self.room_type = room_type
+        self.room_capacity = room_capacity
+        self.room_occupants = room_occupants
 
+    @abstractmethod
     def __repr__(self):
-        return "{}".format(self.r_name)
+        return "{}".format(self.room_name)
 
 
 class Office(Room):
     """Class to create an Office and set it's attributes"""
-    def __init__(self, r_name, r_type='office', r_capacity=6):
-        super(Office, self).__init__(r_name, r_type, r_capacity)
-        self.r_occupants = []
+    def __init__(self, room_name, room_type='office', room_capacity=6):
+        super(Office, self).__init__(room_name, room_type, room_capacity)
+        self.room_occupants = []
 
     def __repr__(self):
-        return "{}".format(self.r_name)
+        return "{}".format(self.room_name)
 
 
 class LivingSpace(Room):
     """Class to create a LivingSpace and set it's attributes"""
-    def __init__(self, r_name, r_type='livingspace', r_capacity=4):
-        super(LivingSpace, self).__init__(r_name, r_type, r_capacity)
-        self.r_occupants = []
+    def __init__(self, room_name, room_type='livingspace', room_capacity=4):
+        super(LivingSpace, self).__init__(room_name, room_type, room_capacity)
+        self.room_occupants = []
 
     def __repr__(self):
-        return "{}".format(self.r_name)
+        return "{}".format(self.room_name)
