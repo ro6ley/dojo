@@ -34,11 +34,11 @@ $ sudo apt install python
 Clone the repo:
 HTTPS
 ```
-$ git clone https://github.com/NaiRobley/dojo.git
+$ git clone https://github.com/ro6ley/dojo.git
 ```
 SSH
 ```
-$ git clone git@github.com:NaiRobley/dojo.git
+$ git clone git@github.com:ro6ley/dojo.git
 ```
 
 Change Directory into the project folder
@@ -48,22 +48,22 @@ $ cd dojo
 
 Create a virtual environment with Python 3.5
 ```
-$ virtualenv --python=python3.5 yourenvname
+$ virtualenv --python=python3.5 env
 ```
 
 Activate the virtual environment you have just created
 ```
-$ source yourenvname/bin/activate
+$ source env/bin/activate
 ```
 
 Install the application's dependencies from requirements.txt to the virtual environment
 ```
-$ (yourenvname) pip install -r requirements.txt
+$ (env) pip install -r requirements.txt
 ```
 
 Run the tool in interactive mode:
 ```
-$ (yourenvname) python main.py -i
+$ (env) python main.py -i
 ```
 
 Usage:
